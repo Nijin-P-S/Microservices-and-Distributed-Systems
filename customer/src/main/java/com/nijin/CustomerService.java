@@ -3,7 +3,7 @@ package com.nijin;
 import org.springframework.stereotype.Service;
 
 @Service
-public record CustomerService() {
+public record CustomerService(CustomerRepository customerRepository) {
     public void registerCustomer(CustomerRegistrationRequest customerRegistrationRequest) {
         Customer customer = Customer.builder()
                 .firstName(customerRegistrationRequest.firstName())
@@ -13,6 +13,9 @@ public record CustomerService() {
 
         //todo: check if the email is valid
         //todo: check if the email not taken
+
+
         //todo: store customer in db
+        customerRepository.save(customer);
     }
 }

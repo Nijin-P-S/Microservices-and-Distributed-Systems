@@ -7,8 +7,12 @@
   <groupId>com.nijin</groupId>
   <artifactId>nijin</artifactId>
   <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
 
   <name>nijin</name>
+  <modules>
+    <module>customer</module>
+  </modules>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

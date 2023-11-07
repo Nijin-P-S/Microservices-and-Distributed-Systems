@@ -1,4 +1,4 @@
-package com.nijin.apigw;
+package com.nijin;
 
 import lombok.AllArgsConstructor;
 import org.springframework.amqp.core.AmqpTemplate;

@@ -1,11 +1,14 @@
-package com.nijin;
+package com.nijin.customer;
 
+import com.nijin.amqp.RabbitMQMessageProducer;
 import com.nijin.clients.fraud.FraudCheckResponse;
 import com.nijin.clients.fraud.FraudClient;
 import com.nijin.clients.notification.NotificationClient;
 import com.nijin.clients.notification.NotificationRequest;
+import com.nijin.customer.Customer;
+import com.nijin.customer.CustomerRegistrationRequest;
+import com.nijin.customer.CustomerRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,10 +16,13 @@ import org.springframework.web.client.RestTemplate;
 @AllArgsConstructor
 public class CustomerService {
 
-    private final CustomerRepository customerRepository;
-    private final RestTemplate restTemplate;
-    private final FraudClient fraudClient;
 //    private final NotificationClient notificationClient;
+//    private final RestTemplate restTemplate;
+    private final CustomerRepository customerRepository;
+    private final FraudClient fraudClient;
+    private final RabbitMQMessageProducer rabbitMQMessageProducer;
+
+
     public void registerCustomer(CustomerRegistrationRequest customerRegistrationRequest) {
         Customer customer = Customer.builder()
                 .firstName(customerRegistrationRequest.firstName())
@@ -43,13 +49,16 @@ public class CustomerService {
             throw new IllegalStateException("fraudster");
         }
 
-        //todo : make it async, i.e add it to queue
-//        notificationClient.sendNotification(
-//                new NotificationRequest(
-//                        customer.getId(),
-//                        customer.getEmail(),
-//                        String.format("Hi %s, welcome...", customer.getFirstName())
-//                )
-//        );
+        //make it async, i.e add it to queue
+        NotificationRequest notificationRequest = new NotificationRequest(
+                customer.getId(),
+                customer.getEmail(),
+                String.format("Hi %s, welcome...", customer.getFirstName())
+        );
+        rabbitMQMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+                );
     }
 }

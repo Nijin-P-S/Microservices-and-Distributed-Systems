@@ -1,4 +1,4 @@
-package com.nijin;
+package com.nijin.customer;
 
 public record CustomerRegistrationRequest(
         String firstName,

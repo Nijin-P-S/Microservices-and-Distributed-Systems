@@ -1,4 +1,4 @@
-package com.nijin;
+package com.nijin.customer;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

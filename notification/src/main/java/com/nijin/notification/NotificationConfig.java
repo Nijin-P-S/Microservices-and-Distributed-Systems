@@ -27,10 +27,12 @@ public class NotificationConfig {
         return new TopicExchange(this.internalExchange);
     }
 
+    @Bean
     public Queue notificationQueue(){
         return new Queue(this.notificationQueue);
     }
 
+    @Bean
     public Binding internalToNotificationBinding(){
         return BindingBuilder
                 .bind(notificationQueue())
